@@ -28,11 +28,15 @@ contract('VoteFactory', function(accounts) {
         voteFactory = await VoteFactory.new({from: owner});
     });
 
+
+
+    //CREATE VOTE AND ADD ANSWER TESTS
+
     it('should create vote', async function () {
         await voteFactory.createVote(question0, {from: creator});
         var vote = await voteFactory.votes(0);
-        
-        vote.should.be.equal(question0);
+
+        vote[0].should.be.equal(question0);
     });
 
     it('should add answer by creator', async function () {
@@ -57,8 +61,102 @@ contract('VoteFactory', function(accounts) {
         await expectThrow(voteFactory.addAnswer(1, answer1, {from: creator}));
     });
 
-    it('should not add answer to notexist question', async function () {
+    it('should not add answer to notexist vote', async function () {
         await voteFactory.createVote(question0, {from: creator});
         await expectThrow(voteFactory.addAnswer(1, answer0, {from: creator}));
     });
+
+    //END CREATE VOTE AND ADD ANSWER TEST
+
+    
+
+    //START'N'STOP VOTE TESTS
+    
+    it('should start vote', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await voteFactory.startVote(0, {from: creator});
+    });
+
+    it('should stop vote', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await voteFactory.startVote(0, {from: creator});
+        await voteFactory.stopVote(0, {from: creator});
+    });
+ 
+    it('should not add answer to started vote', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await voteFactory.startVote(0, {from: creator});
+        await expectThrow(voteFactory.addAnswer(0, answer0, {from: creator}));
+    });
+
+    it('should not add answer to stopped vote', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await voteFactory.startVote(0, {from: creator});
+        await voteFactory.stopVote(0, {from: creator});
+        await expectThrow(voteFactory.addAnswer(0, answer0, {from: creator}));
+    });
+
+    it('should not start vote by user', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await expectThrow(voteFactory.startVote(0, {from: user}));
+    });
+
+    it('should not stop vote by user', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await voteFactory.startVote(0, {from: creator});
+        await expectThrow(voteFactory.stopVote(0, {from: user}));
+    });
+
+    it('should not start vote by owner', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await expectThrow(voteFactory.startVote(0, {from: owner}));
+    });
+
+    it('should not stop vote by owner', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await voteFactory.startVote(0, {from: creator});
+        await expectThrow(voteFactory.stopVote(0, {from: owner}));
+    });
+
+    it('should not start notexist vote', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await expectThrow(voteFactory.startVote(1, {from: creator}));
+    });
+
+    it('should not stop notexist vote', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await voteFactory.startVote(0, {from: creator});
+        await expectThrow(voteFactory.stopVote(1, {from: creator}));
+    });
+    
+    it('should not stop notstarted vote', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await expectThrow(voteFactory.stopVote(0, {from: creator}));
+    });
+
+    it('should not start stopped vote', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await voteFactory.startVote(0, {from: creator});
+        await voteFactory.stopVote(0, {from: creator});
+        await expectThrow(voteFactory.startVote(0, {from: creator}));
+    });
+
+    it('should not start vote by another creator', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await voteFactory.createVote(question1, {from: creator1});
+        await expectThrow(voteFactory.startVote(0, {from: creator1}));
+        await expectThrow(voteFactory.startVote(1, {from: creator}));
+    });
+
+    it('should not stop vote by another creator', async function () {
+        await voteFactory.createVote(question0, {from: creator});
+        await voteFactory.createVote(question1, {from: creator1});
+        await voteFactory.startVote(0, {from: creator});
+        await voteFactory.startVote(1, {from: creator1});
+        await expectThrow(voteFactory.stopVote(0, {from: creator1}));
+        await expectThrow(voteFactory.stopVote(1, {from: creator}));
+    });
+
+    //END START'N'STOP VOTE TESTS
+
 });
