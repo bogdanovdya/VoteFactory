@@ -48,6 +48,13 @@ contract VoteFactory is Ownable {
         votes[_voteId].voteState = State.Started;
     }
 
+    /*старт из стейта inital или stopped
+    function startVote(uint _voteId) public ownerOfVote(_voteId) {
+        require((votes[_voteId].voteState == State.Inital) || (votes[_voteId].voteState == State.Stopped));
+        votes[_voteId].voteState = State.Started;
+    }
+    */
+
     function stopVote(uint _voteId) public voteStateStarted(_voteId) ownerOfVote(_voteId) {
         votes[_voteId].voteState = State.Stopped;
     }
