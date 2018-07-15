@@ -8,11 +8,14 @@ const should = require('chai')
     .should();
 
 import expectThrow from './helpers/expectThrow.js';
+import { get } from 'https';
 
 var VoteFactory = artifacts.require("./VoteFactory.sol");
+var Test = artifacts.require("./Test.sol");
 
 contract('VoteFactory', function(accounts) {
     var voteFactory;
+    var test;
 
     const owner = accounts[0];
     const creator = accounts[1];
@@ -26,7 +29,26 @@ contract('VoteFactory', function(accounts) {
 
     beforeEach('setup contract for each test', async function () {
         voteFactory = await VoteFactory.new({from: owner});
+        test = await Test.new({from: owner});
     });
+
+
+    //OWNER TESTS
+
+    it('should transfer ownership', async function(){
+        var newOwner = await test.testTransferOwnership(creator, {from: owner});
+        
+        newOwner.should.be.equal(creator);
+    });
+
+    it('should renounce owner', async function(){
+        await test.testTransferOwnership(creator, {from: owner});
+        var oldOwner = await test.testRenounceOwnership({from: creator});
+
+        oldOwner.should.be.equal(owner);
+    });
+
+    //END OWNER TESTS
 
 
 
@@ -40,8 +62,10 @@ contract('VoteFactory', function(accounts) {
     });
 
     it('should add answer by creator', async function () {
-        await voteFactory.createVote(question0, {from: creator});
-        await voteFactory.addAnswer(0, answer0, {from: creator});
+        await test.createVote(question0, {from: creator});
+        var testanswer = await test.testAddAnswer(0, answer0, {from: creator});
+
+        testanswer.should.be.equal(answer0);
     });
 
     it('should not add answer by user', async function () {
@@ -66,21 +90,27 @@ contract('VoteFactory', function(accounts) {
         await expectThrow(voteFactory.addAnswer(1, answer0, {from: creator}));
     });
 
-    //END CREATE VOTE AND ADD ANSWER TEST
+    //END CREATE VOTE AND ADD ANSWER TESTS
 
     
 
     //START'N'STOP VOTE TESTS
     
     it('should start vote', async function () {
-        await voteFactory.createVote(question0, {from: creator});
-        await voteFactory.startVote(0, {from: creator});
+        await test.createVote(question0, {from: creator});
+        var state = await test.testStartVote(0, {from: creator});
+
+        var statec = state['c']
+        statec[0].should.be.equal(1);
     });
 
     it('should stop vote', async function () {
-        await voteFactory.createVote(question0, {from: creator});
-        await voteFactory.startVote(0, {from: creator});
-        await voteFactory.stopVote(0, {from: creator});
+        await test.createVote(question0, {from: creator});
+        await test.startVote(0, {from: creator});
+        var state = await test.testStopVote(0, {from: creator});
+
+        var statec = state['c']
+        statec[0].should.be.equal(2);
     });
  
     it('should not add answer to started vote', async function () {

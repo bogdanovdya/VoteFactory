@@ -28,15 +28,16 @@ contract VoteFactory is Ownable {
 
     struct Vote {
         string question;
-        string[] answers;
         State voteState;
+        string[] answers;
+        
     }
     
     Vote[] public votes;
     mapping (uint => address) voteToOwner;
 
     function createVote(string _question) public {
-        uint voteId = votes.push(Vote(_question, new string[](0), State.Inital)) - 1;
+        uint voteId = votes.push(Vote(_question, State.Inital, new string[](0))) - 1;
         voteToOwner[voteId] = msg.sender;
     }
     
@@ -47,7 +48,7 @@ contract VoteFactory is Ownable {
     function startVote(uint _voteId) public voteStateInital(_voteId) ownerOfVote(_voteId) {
         votes[_voteId].voteState = State.Started;
     }
-
+    
     /*старт из стейта inital или stopped
     function startVote(uint _voteId) public ownerOfVote(_voteId) {
         require((votes[_voteId].voteState == State.Inital) || (votes[_voteId].voteState == State.Stopped));
