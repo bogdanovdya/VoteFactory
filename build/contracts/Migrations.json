@@ -193,7 +193,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 428,
+                        "referencedDeclaration": 672,
                         "src": "161:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -279,7 +279,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 428,
+                        "referencedDeclaration": 672,
                         "src": "220:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -843,7 +843,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 428,
+                        "referencedDeclaration": 672,
                         "src": "161:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -929,7 +929,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 428,
+                        "referencedDeclaration": 672,
                         "src": "220:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1379,9 +1379,9 @@
       "events": {},
       "links": {},
       "address": "0x789539e72980d4f484f45e609ce45f056e242f8f",
-      "transactionHash": "0xecde3e8022c6ec9870f8cf107d9c4d8d17799da38c879a5dfffeda78b3eafece"
+      "transactionHash": "0xf75cd0f03693fa4a2ce4656270282910d8379d161be0d4b5eccc87e6664a6e55"
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-07-15T09:37:46.921Z"
+  "updatedAt": "2018-07-17T08:31:34.364Z"
 }

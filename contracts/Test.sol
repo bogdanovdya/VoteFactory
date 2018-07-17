@@ -30,4 +30,12 @@ contract Test is VoteFactory {
         return owner;
     }
 
+    function testCast(uint256 _voteId, uint256 _answerId) external constant returns(string) {
+        cast(_voteId, _answerId);
+        for (uint i = 0; i < votes[_voteId].users.length; i++){
+            if (votes[_voteId].users[i] == msg.sender){
+                return votes[_voteId].answers[votes[_voteId].userToAnswer[i]];
+            }
+        }
+    }
 }
